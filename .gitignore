@@ -6,3 +6,6 @@ apps/api/prisma/dev.db-journal
 apps/api/prisma/*.db
 *.log
 .DS_Store
+node_modules/
+apps/api/node_modules/
+apps/web/node_modules/
