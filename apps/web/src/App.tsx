@@ -597,6 +597,42 @@ function SimBar({ onSimulationComplete, onTick, onRunningChange }: { onSimulatio
   );
 }
 
+// Password gate
+function PasswordGate({ children }: { children: React.ReactNode }) {
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('auth') === 'cja');
+  const [input, setInput] = useState('');
+  const [error, setError] = useState(false);
+
+  if (unlocked) return <>{children}</>;
+
+  const submit = () => {
+    if (input === 'cja') { sessionStorage.setItem('auth', 'cja'); setUnlocked(true); }
+    else { setError(true); setInput(''); }
+  };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#dae0e6' }}>
+      <div style={{ background: '#fff', borderRadius: 8, padding: '40px 48px', boxShadow: '0 2px 12px rgba(0,0,0,0.12)', minWidth: 320, textAlign: 'center' }}>
+        <div style={{ fontSize: 28, fontWeight: 800, color: '#ff4500', marginBottom: 4 }}>OpenClaw Reddit</div>
+        <div style={{ fontSize: 13, color: '#878a8c', marginBottom: 28 }}>Enter password to continue</div>
+        <input
+          type="password"
+          value={input}
+          onChange={e => { setInput(e.target.value); setError(false); }}
+          onKeyDown={e => e.key === 'Enter' && submit()}
+          placeholder="Password"
+          autoFocus
+          style={{ width: '100%', padding: '10px 12px', border: `1px solid ${error ? '#cc0000' : '#edeff1'}`, borderRadius: 4, fontSize: 15, marginBottom: 8, boxSizing: 'border-box' }}
+        />
+        {error && <div style={{ color: '#cc0000', fontSize: 13, marginBottom: 8 }}>Incorrect password</div>}
+        <button onClick={submit} style={{ width: '100%', padding: '10px', background: '#ff4500', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
+          Enter
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // Main app
 export default function App() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -617,6 +653,7 @@ export default function App() {
   const handleBack = () => setSelectedPostId(null);
 
   return (
+    <PasswordGate>
     <div>
       <header className="header">
         <h1>OpenClaw Reddit</h1>
@@ -643,5 +680,6 @@ export default function App() {
         <AgentPanel agents={agents} onPostClick={handlePostClick} simRunning={simRunning} />
       </div>
     </div>
+    </PasswordGate>
   );
 }
