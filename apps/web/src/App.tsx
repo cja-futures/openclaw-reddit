@@ -599,14 +599,14 @@ function SimBar({ onSimulationComplete, onTick, onRunningChange }: { onSimulatio
 
 // Password gate
 function PasswordGate({ children }: { children: React.ReactNode }) {
-  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('auth') === 'cja');
+  const [unlocked, setUnlocked] = useState(() => localStorage.getItem('auth') === 'cja');
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
 
   if (unlocked) return <>{children}</>;
 
   const submit = () => {
-    if (input === 'cja') { sessionStorage.setItem('auth', 'cja'); setUnlocked(true); }
+    if (input === 'cja') { localStorage.setItem('auth', 'cja'); setUnlocked(true); }
     else { setError(true); setInput(''); }
   };
 
@@ -633,8 +633,8 @@ function PasswordGate({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Main app
-export default function App() {
+// Shared feed view
+function FeedView({ showSimBar }: { showSimBar: boolean }) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -653,7 +653,6 @@ export default function App() {
   const handleBack = () => setSelectedPostId(null);
 
   return (
-    <PasswordGate>
     <div>
       <header className="header">
         <h1>OpenClaw Reddit</h1>
@@ -664,7 +663,9 @@ export default function App() {
       </header>
       <div className="layout">
         <div className="main-content">
-          <SimBar onSimulationComplete={fetchPosts} onTick={fetchPosts} onRunningChange={setSimRunning} />
+          {showSimBar && (
+            <SimBar onSimulationComplete={fetchPosts} onTick={fetchPosts} onRunningChange={setSimRunning} />
+          )}
           {selectedPostId ? (
             <ThreadView postId={selectedPostId} onBack={handleBack} />
           ) : (
@@ -677,9 +678,25 @@ export default function App() {
             </div>
           )}
         </div>
-        <AgentPanel agents={agents} onPostClick={handlePostClick} simRunning={simRunning} />
+        {showSimBar && (
+          <AgentPanel agents={agents} onPostClick={handlePostClick} simRunning={simRunning} />
+        )}
       </div>
     </div>
-    </PasswordGate>
   );
+}
+
+// Main app — routes based on pathname
+export default function App() {
+  const isInternal = window.location.pathname.startsWith('/internal');
+
+  if (isInternal) {
+    return (
+      <PasswordGate>
+        <FeedView showSimBar={true} />
+      </PasswordGate>
+    );
+  }
+
+  return <FeedView showSimBar={false} />;
 }
