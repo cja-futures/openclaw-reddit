@@ -92,9 +92,18 @@ export class SimulationEngine {
     // Per-agent memory persists across all rounds
     const agentMemory = new Map<string, Array<{ action: string; summary: string }>>();
     const roundsSincePost = new Map<string, number>();
+
+    // Seed roundsSincePost from DB — how many decisions ago did each agent last post?
     for (const agent of AGENTS) {
       agentMemory.set(agent.id, []);
-      roundsSincePost.set(agent.id, 0);
+      const recentLogs = await this.db.agentDecisionLog.findMany({
+        where: { agentId: agent.id },
+        orderBy: { timestamp: 'desc' },
+        take: 10,
+        select: { chosenAction: true },
+      });
+      const lastPostIndex = recentLogs.findIndex(l => l.chosenAction === 'post');
+      roundsSincePost.set(agent.id, lastPostIndex === -1 ? recentLogs.length : lastPostIndex);
     }
 
     let decisionsLogged = 0;
@@ -288,6 +297,9 @@ export class SimulationEngine {
   }
 
   private async applyDecision(agent: AgentDefinition, decision: AgentDecision): Promise<string | null> {
+    // Normalize LLM variants — model sometimes outputs "reply" instead of "comment"
+    if ((decision.chosenAction as string) === 'reply') decision.chosenAction = 'comment';
+
     switch (decision.chosenAction) {
       case 'post': {
         if (!decision.publicContent.title || !decision.publicContent.body) return null;

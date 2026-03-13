@@ -79,6 +79,7 @@ Decide what to do next. Think like a real person:
 - If nothing interests you but you still feel like contributing, write a new post on one of your interests
 - Don't repeat actions you've already taken (don't comment again on posts marked [you already commented here], don't vote again on posts marked [you already voted here])
 - "none" is only valid if you genuinely have nothing to say and nothing to post — this should be rare
+- To reply to a comment: set chosenAction to "comment" AND set targetCommentId — do NOT use "reply" as chosenAction, it is not valid
 
 Respond with ONLY valid JSON:
 {
@@ -93,7 +94,7 @@ Respond with ONLY valid JSON:
       "commentWhyOrWhyNot": "your honest reaction"
     }
   ],
-  "chosenAction": "post",
+  "chosenAction": "post",  // MUST be one of: "none", "post", "comment", "vote" — never "reply"
   "reasoningSummary": "2-3 sentences on what you decided and why",
   "publicContent": {
     "title": "only for new posts",

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { api } from './api/client';
 import { Post, Agent, RedditComment, SimulationRun, SimulationProgress, AgentDecisionLog, AgentDecision } from './lib/types';
 
@@ -639,18 +639,62 @@ function FeedView({ showSimBar }: { showSimBar: boolean }) {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [simRunning, setSimRunning] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [refreshTick, setRefreshTick] = useState(0);
+  const pageRef = useRef(page);
+  pageRef.current = page;
 
-  const fetchPosts = useCallback(() => {
-    api.get<Post[]>('/api/posts').then(setPosts).catch(console.error);
+  const fetchPage = useCallback((p: number) => {
+    api.get<{ posts: Post[]; total: number; page: number; totalPages: number }>(`/api/posts?page=${p}`)
+      .then(data => {
+        setPosts(data.posts);
+        setTotalPages(data.totalPages);
+      })
+      .catch(console.error);
+  }, []);
+
+  // Refresh current page without navigating
+  const refreshCurrentPage = useCallback(() => {
+    setRefreshTick(t => t + 1);
+  }, []);
+
+  // Navigate to page 1 and refresh (used after new post or sim complete)
+  const resetToFirstPage = useCallback(() => {
+    if (pageRef.current === 1) setRefreshTick(t => t + 1);
+    else setPage(1);
   }, []);
 
   useEffect(() => {
-    fetchPosts();
+    fetchPage(page);
+  }, [page, refreshTick, fetchPage]);
+
+  useEffect(() => {
     api.get<Agent[]>('/api/agents').then(setAgents).catch(console.error);
-  }, [fetchPosts]);
+  }, []);
 
   const handlePostClick = (postId: string) => setSelectedPostId(postId);
   const handleBack = () => setSelectedPostId(null);
+
+  const paginationControls = totalPages > 1 && (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '16px 0' }}>
+      <button
+        onClick={() => setPage(p => p - 1)}
+        disabled={page <= 1}
+        style={{ padding: '6px 14px', cursor: page <= 1 ? 'default' : 'pointer', opacity: page <= 1 ? 0.4 : 1, borderRadius: 4, border: '1px solid #ccc', background: '#fff', fontSize: 13 }}
+      >
+        ← Prev
+      </button>
+      <span style={{ fontSize: 13, color: '#555' }}>Page {page} of {totalPages}</span>
+      <button
+        onClick={() => setPage(p => p + 1)}
+        disabled={page >= totalPages}
+        style={{ padding: '6px 14px', cursor: page >= totalPages ? 'default' : 'pointer', opacity: page >= totalPages ? 0.4 : 1, borderRadius: 4, border: '1px solid #ccc', background: '#fff', fontSize: 13 }}
+      >
+        Next →
+      </button>
+    </div>
+  );
 
   return (
     <div>
@@ -664,17 +708,18 @@ function FeedView({ showSimBar }: { showSimBar: boolean }) {
       <div className="layout">
         <div className="main-content">
           {showSimBar && (
-            <SimBar onSimulationComplete={fetchPosts} onTick={fetchPosts} onRunningChange={setSimRunning} />
+            <SimBar onSimulationComplete={resetToFirstPage} onTick={refreshCurrentPage} onRunningChange={setSimRunning} />
           )}
           {selectedPostId ? (
             <ThreadView postId={selectedPostId} onBack={handleBack} />
           ) : (
             <div>
-              <ComposeBox onPost={fetchPosts} />
+              <ComposeBox onPost={resetToFirstPage} />
               {posts.length === 0 && <div className="loading">No posts yet — run a simulation or create one.</div>}
               {posts.map(post => (
-                <PostCard key={post.id} post={post} onClick={() => handlePostClick(post.id)} onDelete={fetchPosts} />
+                <PostCard key={post.id} post={post} onClick={() => handlePostClick(post.id)} onDelete={refreshCurrentPage} />
               ))}
+              {paginationControls}
             </div>
           )}
         </div>

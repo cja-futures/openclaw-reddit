@@ -5,16 +5,26 @@ const HUMAN_USER_ID = 'user_leedj';
 
 export const postsRouter = Router();
 
-postsRouter.get('/', async (_req, res) => {
-  const posts = await db.post.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 50,
-    include: {
-      author: { select: { id: true, name: true, avatarSeed: true } },
-      _count: { select: { comments: true } },
-    },
-  });
-  res.json(posts);
+const PAGE_SIZE = 25;
+
+postsRouter.get('/', async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page as string) || 1);
+  const skip = (page - 1) * PAGE_SIZE;
+
+  const [posts, total] = await Promise.all([
+    db.post.findMany({
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: PAGE_SIZE,
+      include: {
+        author: { select: { id: true, name: true, avatarSeed: true } },
+        _count: { select: { comments: true } },
+      },
+    }),
+    db.post.count(),
+  ]);
+
+  res.json({ posts, total, page, totalPages: Math.ceil(total / PAGE_SIZE) });
 });
 
 // Recursive helper: nest replies under their parents
