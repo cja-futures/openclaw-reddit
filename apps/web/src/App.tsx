@@ -513,7 +513,7 @@ function ProgressBar({ progress }: { progress: SimulationProgress }) {
 }
 
 // Simulation bar
-function SimBar({ onSimulationComplete, onTick, onRunningChange, agentCount }: { onSimulationComplete: () => void; onTick: () => void; onRunningChange: (running: boolean) => void; agentCount: number }) {
+function SimBar({ onSimulationComplete, onTick, onRunningChange }: { onSimulationComplete: () => void; onTick: () => void; onRunningChange: (running: boolean) => void; }) {
   const [runs, setRuns] = useState<SimulationRun[]>([]);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
   const [progress, setProgress] = useState<SimulationProgress | null>(null);
@@ -627,7 +627,7 @@ export default function App() {
       </header>
       <div className="layout">
         <div className="main-content">
-          <SimBar onSimulationComplete={fetchPosts} onTick={fetchPosts} onRunningChange={setSimRunning} agentCount={agents.length || 20} />
+          <SimBar onSimulationComplete={fetchPosts} onTick={fetchPosts} onRunningChange={setSimRunning} />
           {selectedPostId ? (
             <ThreadView postId={selectedPostId} onBack={handleBack} />
           ) : (
