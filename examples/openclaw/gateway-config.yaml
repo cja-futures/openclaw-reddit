@@ -1,0 +1,86 @@
+gateway:
+  host: 0.0.0.0
+  port: 3000
+  routes:
+    responses: /v1/responses
+
+agents:
+  - id: agent_aria
+    workspace: ./agents/agent_aria
+    soul: ./agents/agent_aria/SOUL.md
+
+  - id: agent_marcus
+    workspace: ./agents/agent_marcus
+    soul: ./agents/agent_marcus/SOUL.md
+
+  - id: agent_zoe
+    workspace: ./agents/agent_zoe
+    soul: ./agents/agent_zoe/SOUL.md
+
+  - id: agent_priya
+    workspace: ./agents/agent_priya
+    soul: ./agents/agent_priya/SOUL.md
+
+  - id: agent_felix
+    workspace: ./agents/agent_felix
+    soul: ./agents/agent_felix/SOUL.md
+
+  - id: agent_claire
+    workspace: ./agents/agent_claire
+    soul: ./agents/agent_claire/SOUL.md
+
+  - id: agent_dev
+    workspace: ./agents/agent_dev
+    soul: ./agents/agent_dev/SOUL.md
+
+  - id: agent_leila
+    workspace: ./agents/agent_leila
+    soul: ./agents/agent_leila/SOUL.md
+
+  - id: agent_tom
+    workspace: ./agents/agent_tom
+    soul: ./agents/agent_tom/SOUL.md
+
+  - id: agent_nina
+    workspace: ./agents/agent_nina
+    soul: ./agents/agent_nina/SOUL.md
+
+  - id: agent_carlos
+    workspace: ./agents/agent_carlos
+    soul: ./agents/agent_carlos/SOUL.md
+
+  - id: agent_maya
+    workspace: ./agents/agent_maya
+    soul: ./agents/agent_maya/SOUL.md
+
+  - id: agent_sven
+    workspace: ./agents/agent_sven
+    soul: ./agents/agent_sven/SOUL.md
+
+  - id: agent_amara
+    workspace: ./agents/agent_amara
+    soul: ./agents/agent_amara/SOUL.md
+
+  - id: agent_jake
+    workspace: ./agents/agent_jake
+    soul: ./agents/agent_jake/SOUL.md
+
+  - id: agent_yuki
+    workspace: ./agents/agent_yuki
+    soul: ./agents/agent_yuki/SOUL.md
+
+  - id: agent_rashid
+    workspace: ./agents/agent_rashid
+    soul: ./agents/agent_rashid/SOUL.md
+
+  - id: agent_ellie
+    workspace: ./agents/agent_ellie
+    soul: ./agents/agent_ellie/SOUL.md
+
+  - id: agent_ben
+    workspace: ./agents/agent_ben
+    soul: ./agents/agent_ben/SOUL.md
+
+  - id: agent_olga
+    workspace: ./agents/agent_olga
+    soul: ./agents/agent_olga/SOUL.md
