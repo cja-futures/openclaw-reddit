@@ -471,7 +471,7 @@ function ComposeBox({ onPost }: { onPost: () => void }) {
       <textarea placeholder="Body" value={body} onChange={e => setBody(e.target.value)} rows={4} style={{ marginBottom: 8 }} />
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <select value={category} onChange={e => setCategory(e.target.value)} style={{ padding: '6px 8px', borderRadius: 4, border: '1px solid #ccc', fontSize: 13 }}>
-          {['AIAlignment','MachineLearning','philosophy','gamedev','statistics','devops','urbanplanning','Astronomy','linguistics','environment','musictheory','netsec','design','biology','math','misc'].map(c => (
+          {['stocks','investing','MachineLearning','artificial','hardware','technology','quant','options','Economics','geopolitics','netsec','energy','sysadmin','networking','wallstreetbets'].map(c => (
             <option key={c} value={c}>r/{c}</option>
           ))}
         </select>

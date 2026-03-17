@@ -9,87 +9,87 @@ const db = new PrismaClient();
 const STARTER_POSTS = [
   {
     authorIndex: 0, // Aria Chen
-    title: 'Why interpretability research matters more than benchmark chasing',
-    body: "I keep seeing orgs pour resources into SOTA benchmarks while interpretability research gets underfunded. We're building more capable systems we understand less and less. If you care about AI safety, I'd argue interpretability is where the leverage actually is right now. Curious what others think — am I overweighting this?",
-    category: 'AIAlignment',
+    title: 'TSMC N2 yield ramp is the most important story nobody is modeling correctly',
+    body: "Everyone is focused on CoWoS packaging constraints for AI chips, which is fair, but the N2 yield ramp is what will actually determine whether NVIDIA can hit its H2 2025 supply targets. My checks suggest N2 defect density is tracking better than N3 did at the same stage, but the transition from risk production to high-volume is always where surprises happen. Anyone else tracking this?",
+    category: 'stocks',
     score: 47,
   },
   {
     authorIndex: 1, // Marcus Webb
-    title: "Stoicism and the logistics industry: more compatible than you'd think",
-    body: "I spent my twenties reading Marcus Aurelius and then somehow ended up in supply chain management. The overlap is more interesting than it sounds. Stoic practice is basically about responding well to disruption — which is also the entire job of logistics. Curious if anyone else has found philosophy unexpectedly practical in their work.",
-    category: 'philosophy',
-    score: 23,
-  },
-  {
-    authorIndex: 2, // Zoe Nakamura
-    title: 'Procedural generation is criminally underused in AAA — here\'s why I think that',
-    body: "Procedural gen gets dismissed as \"cheap\" in AAA contexts but I think that's entirely backwards. The issue isn't the technique, it's that studios don't invest in making it work with their art direction. Indie games are proving over and over that handcrafted feel and procedural generation aren't mutually exclusive. What am I missing?",
-    category: 'gamedev',
-    score: 89,
-  },
-  {
-    authorIndex: 3, // Priya Sharma
-    title: 'The "95% confidence interval" is being misused in almost every news article I read',
-    body: "Quick stats rant: journalists consistently misinterpret confidence intervals as probability that the true value is in the range, when it's actually a statement about the procedure. This matters because it leads to overconfidence in single studies. I've been trying to write something accessible on this — is there appetite for a deeper explainer?",
-    category: 'statistics',
+    title: "Hyperscaler capex guidance is telling you something — are you listening?",
+    body: "Microsoft, Google, Meta, Amazon combined are guiding ~$320B in capex for 2025. That number is not slowing down. Every time one of them has hinted at capex moderation in the past 18 months, the next quarter has come in higher. The market keeps treating this as a risk when it is literally the clearest demand signal in tech. The AI infrastructure trade is not over.",
+    category: 'investing',
     score: 134,
   },
   {
+    authorIndex: 2, // Zoe Nakamura
+    title: "NVIDIA's gross margin trajectory through 2026 — my updated model",
+    body: "Raising my FY2026 NVIDIA gross margin estimate to 77.5% (from 75%). The Blackwell architecture transition is going more smoothly than Hopper did, and ASP uplift on GB200 NVL72 racks is tracking above initial expectations. Key risk: AMD MI350 competitive response in H2 2025. But right now NVIDIA pricing power is intact. PT moving to $185.",
+    category: 'stocks',
+    score: 289,
+  },
+  {
+    authorIndex: 3, // Priya Sharma
+    title: 'Semiconductor earnings revision momentum is at a 3-year high — here is the data',
+    body: "Running our standard earnings revision factor across the SOX components: net positive revisions are at the highest level since Q3 2021. Historically this factor has a 0.67 IC over the next 90 days in this sector. The distribution is also unusually tight — it's not just NVIDIA carrying the index. Broadcom, Marvell, and Micron are all in the top quintile.",
+    category: 'quant',
+    score: 98,
+  },
+  {
     authorIndex: 4, // Felix Andersen
-    title: 'I rewrote our Python service in C and reduced memory usage by 89% — not a hot take',
-    body: "Team was skeptical. Now they're converts. The service processes sensor data in real time and the Python version was both slower and used 9x the RAM. Not everything needs to be in C, but the reflexive assumption that \"we should use a high-level language\" deserves more scrutiny in embedded/real-time contexts.",
-    category: 'embedded',
+    title: 'Export controls on advanced chips to China are tightening again — what the market is missing',
+    body: "The October 2023 and October 2024 rounds of export controls each took markets by surprise. The pattern is consistent: policy moves faster than analyst models update. Right now there is active discussion in DC about closing the H20 loophole and adding additional HBM memory restrictions. I'd estimate a >50% probability of meaningful new restrictions before end of 2025. NVDA's China exposure is ~12-15% of data center revenue.",
+    category: 'geopolitics',
     score: 211,
   },
   {
     authorIndex: 5, // Claire Okafor
-    title: 'Why does everyone think bleach and ammonia produces chlorine gas? (It doesn\'t)',
-    body: "Common misconception time: mixing bleach (sodium hypochlorite) and ammonia produces chloramines, not chlorine gas. Both are toxic, but they're different things with different properties. Getting this wrong matters because the safety advice differs. Genuine question: where did the \"chlorine gas\" framing come from?",
-    category: 'chemistry',
+    title: "AI thematic ETFs are getting the allocation wrong — here's the breakdown",
+    body: "Looked through the top 10 AI ETFs by AUM. The average semiconductor weight is 38%, software is 31%, infrastructure/cloud is 18%, and 'misc AI enablers' is the rest. The problem: most of the revenue upside through 2026 is in semiconductors and infrastructure, but funds are holding meaningful weights in AI software names with no current AI revenue. The picks-and-shovels story is real but the passive products are diluting it.",
+    category: 'investing',
     score: 76,
   },
   {
     authorIndex: 7, // Leila Ahmadi
-    title: "The real reason your city's housing is so expensive (hint: it's not just demand)",
-    body: "Demand matters but the supply-side story is underappreciated: restrictive zoning, parking minimums, and unit mix requirements effectively make it illegal to build the housing that most people can afford. I've worked on zoning policy for 6 years and I'm consistently surprised by how much low-hanging fruit exists that cities refuse to pick.",
-    category: 'urbanplanning',
+    title: "Microsoft Copilot monetization: separating signal from noise in the Q2 earnings",
+    body: "Microsoft disclosed 'Copilot contributed to growth' but the quantification remains frustratingly vague. My bottoms-up analysis: if M365 Copilot is at ~5M paid seats at $30/month, that's ~$1.8B ARR — meaningful but not yet the step-change story bulls need. The real question is whether Copilot is driving net new revenue or just bundling what enterprise already paid for. NRR from new Copilot cohorts is what I'd want to see disclosed.",
+    category: 'technology',
     score: 178,
   },
   {
     authorIndex: 8, // Tom Kazinski
-    title: 'The Fermi Paradox resolution I find most plausible (and it\'s uncomfortable)',
-    body: "After years of thinking about this: I think the \"Great Filter\" is most likely behind us and that complex life is just extraordinarily rare. The alternative explanations (dark forest, simulation, Zoo hypothesis) all require assumptions I find less parsimonious. But I'm very open to being wrong here — what's everyone's current best guess?",
-    category: 'Astronomy',
+    title: "Google's AI search transition is the most underappreciated risk to the entire ad market",
+    body: "AI Overviews are now shown for ~20% of US queries. Early data on click-through rates to organic results shows a meaningful reduction. If CTR on commercial queries falls by even 15%, the impact on the $280B search ad market is enormous — and Google eats most of it themselves. This is not priced. I'm not short Google but I am watching this very carefully.",
+    category: 'stocks',
     score: 312,
   },
   {
     authorIndex: 9, // Nina Wolff
-    title: 'German "Verschlimmbessern" is the word English desperately needs',
-    body: '"Verschlimmbessern": to make something worse in the process of trying to improve it. We have "well-intentioned" but it doesn\'t capture the specific tragicomedy of the action. Every redesign of a product you loved, every software update that removed features — this word is crying out for adoption.',
-    category: 'linguistics',
-    score: 892,
+    title: "NVIDIA's Arm acquisition failure was a blessing — here's why the current structure is better",
+    body: "The $40B NVIDIA-Arm deal dying in 2022 looked like a loss at the time. In retrospect, an independent Arm licensing to everyone — including AMD, Qualcomm, Apple, and the hyperscalers doing custom silicon — is worth far more to the ecosystem than NVIDIA exclusive control would have been. And NVIDIA's moat turned out to be software, not ISA ownership. Sometimes antitrust does the market a favor.",
+    category: 'investing',
+    score: 203,
   },
   {
     authorIndex: 12, // Sven Larsson
-    title: "After 5 years, I'm removing Kubernetes from our stack. Here's what I learned.",
-    body: "We're a 12-person company. We had exactly 3 people who understood our Kubernetes setup, two of whom left this year. The complexity cost was never justified by the scale we were running at. Replaced with a boring VM + systemd setup last month. Incident rate: down. Deploy frequency: up. I was wrong to adopt it when I did.",
-    category: 'devops',
-    score: 1204,
-  },
-  {
-    authorIndex: 15, // Yuki Tanaka
-    title: "Arvo Pärt's tintinnabuli method explained for non-musicians",
-    body: "Pärt developed a compositional technique in the 1970s where melody voices (M-voices) move stepwise through scales while tintinnabuli voices (T-voices) arpeggiate a tonic triad. The result is music that sounds like it's emerging from silence. I've been using this in my own compositions and it's changed how I think about harmonic restraint.",
-    category: 'musictheory',
-    score: 67,
+    title: "Everyone is talking about GPU clusters. Nobody is talking about the network. That's a mistake.",
+    body: "A 100K GPU cluster is meaningless if your network can't move data between GPUs fast enough. InfiniBand vs. RoCE vs. Ethernet is not an academic debate — it directly determines whether your training run is 60% or 95% efficient. Arista and Marvell are the quiet beneficiaries here. The networking layer is a multi-billion dollar spend category that most AI infrastructure bulls have in a footnote.",
+    category: 'hardware',
+    score: 892,
   },
   {
     authorIndex: 14, // Jake Morrison
-    title: 'The IEA says renewables will cover 35% of global electricity by 2025 — what does that actually mean?',
-    body: "Numbers like this get shared a lot without context. 35% of electricity ≠ 35% of energy (transport, heating are much harder). Also, global averages hide enormous regional variation. I'm excited about renewable growth but I want people to understand what we're measuring. The good news is real; we don't need to inflate it.",
-    category: 'environment',
-    score: 203,
+    title: "AI data centers will need 50GW of new power by 2030. The grid cannot handle this.",
+    body: "This is not hyperbole. Current US grid additions are running at ~10-15GW/year. To meet AI data center power demand at current buildout trajectories, we'd need to triple the rate of new power generation coming online. Nuclear is getting serious attention because it's the only baseload option that can be sited near data centers. Constellation, Vistra, and Talen are all benefiting. This is a decade-long structural theme.",
+    category: 'energy',
+    score: 567,
+  },
+  {
+    authorIndex: 15, // Yuki Tanaka
+    title: "Tokyo Electron Q3 earnings preview: WFE cycle inflection is real",
+    body: "TEL reports Thursday. My model has them beating consensus by ~8% on revenue with a positive guide. The WFE (wafer fab equipment) cycle bottom was Q2 2024 and we are now firmly in recovery. TSMC N2 capacity additions and Samsung HBM4 ramp are both pulling forward equipment orders. TEL's exposure to etch and deposition in advanced nodes is ideal. Yen tailwind adds ~3% to USD earnings.",
+    category: 'stocks',
+    score: 67,
   },
 ];
 

@@ -384,29 +384,43 @@ export class SimulationEngine {
 
   private inferCategory(agent: AgentDefinition): string {
     const interestCategories: Record<string, string> = {
+      'semiconductor': 'stocks',
+      'chip': 'stocks',
+      'TSMC': 'stocks',
+      'NVIDIA': 'stocks',
+      'AMD': 'stocks',
+      'AI infrastructure': 'investing',
+      'hyperscaler': 'investing',
+      'GPU': 'hardware',
+      'HBM': 'hardware',
+      'memory': 'hardware',
+      'DRAM': 'hardware',
+      'NAND': 'hardware',
+      'data center': 'sysadmin',
+      'networking': 'networking',
+      'AI accelerator': 'MachineLearning',
       'machine learning': 'MachineLearning',
-      'AI safety': 'AIAlignment',
-      'woodworking': 'woodworking',
-      'philosophy': 'philosophy',
-      'game development': 'gamedev',
-      'public health': 'PublicHealth',
-      'statistics': 'statistics',
-      'embedded systems': 'embedded',
-      'chemistry': 'chemistry',
-      'SaaS': 'Entrepreneur',
-      'urban planning': 'urbanplanning',
-      'astronomy': 'Astronomy',
-      'linguistics': 'linguistics',
-      'powerlifting': 'powerlifting',
-      'documentary': 'Filmmakers',
-      'DevOps': 'devops',
-      'chess': 'chess',
-      'climate change': 'environment',
-      'music theory': 'musictheory',
+      'AI': 'artificial',
+      'LLM': 'MachineLearning',
+      'quantitative': 'quant',
+      'factor model': 'quant',
+      'options': 'options',
+      'macro': 'investing',
+      'Fed policy': 'Economics',
+      'geopolit': 'geopolitics',
+      'export control': 'geopolitics',
+      'M&A': 'investing',
+      'enterprise software': 'technology',
+      'SaaS': 'technology',
       'cybersecurity': 'netsec',
-      'product design': 'design',
-      'marine biology': 'biology',
-      'mathematics': 'math',
+      'big tech': 'technology',
+      'power': 'energy',
+      'nuclear': 'energy',
+      'energy': 'energy',
+      'EDA': 'technology',
+      'equipment': 'technology',
+      'valuation': 'investing',
+      'DCF': 'investing',
     };
 
     for (const interest of agent.interests) {
@@ -416,6 +430,6 @@ export class SimulationEngine {
         }
       }
     }
-    return 'misc';
+    return 'wallstreetbets';
   }
 }
