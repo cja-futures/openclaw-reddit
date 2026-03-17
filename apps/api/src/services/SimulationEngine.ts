@@ -5,6 +5,7 @@ import { AGENTS, AgentDefinition } from '../data/agents';
 import { buildAgentSystemPrompt } from '../prompts/agentSystemPrompt';
 import { buildDecisionPrompt } from '../prompts/agentDecisionPrompt';
 import { generateMockDecision } from './MockDecisionGenerator';
+import { fetchLivePoetNews } from './NewsSearchService';
 
 // Each Reddit agent maps to its own gateway agent by id (same pattern as openclaw_invest)
 
@@ -123,6 +124,12 @@ export class SimulationEngine {
           totalAgents: AGENTS.length,
         });
 
+        // Fetch live $POET news once per round (cached 10 min, no-ops if no API key)
+        const livePoetNews = await fetchLivePoetNews();
+        if (livePoetNews) {
+          console.log(`[Round ${round}] Live $POET news injected into agent prompts`);
+        }
+
         // Run agents in parallel with a concurrency limit to avoid overwhelming the gateway
         const CONCURRENCY = 4;
         const results: Array<{ agentId: string; logged: number; didPost: boolean }> = [];
@@ -137,6 +144,7 @@ export class SimulationEngine {
                 agentMemory.get(agent.id)!,
                 signal,
                 sincePost,
+                livePoetNews,
               ).then(result => {
                 completedInRound++;
                 const current = this.progress.get(runId);
@@ -189,10 +197,11 @@ export class SimulationEngine {
     previousActivity: Array<{ action: string; summary: string }>,
     signal: AbortSignal,
     roundsSincePost: number,
+    livePoetNews?: string | null,
   ): Promise<{ logged: number; didPost: boolean }> {
     if (signal.aborted) return { logged: 0, didPost: false };
 
-    const systemPrompt = buildAgentSystemPrompt(agent);
+    const systemPrompt = buildAgentSystemPrompt(agent, livePoetNews);
     const sessionKey = `${runId}-${agent.id}`;
 
     const posts = await this.db.post.findMany({

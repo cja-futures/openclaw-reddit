@@ -15,6 +15,7 @@ const rawEnv = {
   SIMULATION_STEPS_PER_AGENT: process.env.SIMULATION_STEPS_PER_AGENT ?? '5',
   MOCK_MODE: process.env.MOCK_MODE ?? 'false',
   CORS_ORIGIN: process.env.CORS_ORIGIN ?? 'http://localhost:5174',
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? '',
 };
 
 const envSchema = z.object({
@@ -27,6 +28,7 @@ const envSchema = z.object({
   SIMULATION_STEPS_PER_AGENT: z.coerce.number().int().positive(),
   MOCK_MODE: z.string().transform(v => v === 'true'),
   CORS_ORIGIN: z.string().min(1),
+  OPENAI_API_KEY: z.string(),  // optional — enables live $POET web search if set
 });
 
 const parsed = envSchema.safeParse(rawEnv);
